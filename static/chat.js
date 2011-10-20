@@ -29,7 +29,7 @@ function newMessage(form) {
         // Передаю данные в виде словаря
         data: form.serializeArray(),
         success: function(){
-            // Стипаю набранное в строке у клиента
+            // Стираю набранное в строке у клиента
             form.find("input[type=text]").val("").select();
         },
         dataType: "text"
@@ -37,6 +37,17 @@ function newMessage(form) {
 }
 
 function addMessage(response){
+    var obj = jQuery.parseJSON(response);
+    if (obj.type == 'new_message'){
+        $("#inbox").append(obj.html);
+    }
+    else if (obj.type == 'new_user') {
+        $("#inbox").append(obj.html);
+        $("#users_online").append(obj.user);
+    }
+    else if (obj.type == 'user_is_out') {
+        $("#inbox").append(obj.html);
+        $('#'+obj.user_id).remove();
+    }
     poll();
-    $("#inbox").append(response);
 }
