@@ -51,6 +51,7 @@ class MessageMixin(object):
     # Пользователи онлайн
     users_online = []
     messages_cache = []
+    cache_size = 20
 
     def wait_for_messages(self, callback):
         cls = MessageMixin
@@ -66,6 +67,9 @@ class MessageMixin(object):
                 logging.error("Error in waiter callback", exc_info=True)
         cls.waiters = set()
         cls.messages_cache.extend([message])
+        print len(cls.messages_cache)
+        if len(cls.messages_cache) > self.cache_size:
+            cls.messages_cache = cls.messages_cache[-self.cache_size:]
 
     def add_to_users_online(self, user):
         cls = MessageMixin
