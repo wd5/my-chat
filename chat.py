@@ -73,7 +73,11 @@ class MessageMixin(object):
 
     def add_to_users_online(self, user):
         cls = MessageMixin
-        if not user.get_current_user() in cls.users_online:
+        user_html = user.render_string("user.html", user=user.get_current_user(), user_id=user.get_user_id())
+        for i in cls.users_online:
+            print i, "users_online"
+            print str(user_html)
+        if not user_html in cls.users_online:
             self.new_user(user)
 
     def cancel_wait(self, callback):
