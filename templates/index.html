@@ -7,11 +7,13 @@
   </head>
   <body>
     <div id="nav">
-      <b>{{ current_user }}</b> -
-        <a href="/auth/logout">{{ _("Sign out") }}</a><br><br>
+        <a href="/auth/logout">{{ _("Sign out") }}</a>
     </div>
     <div id="users_online">
         Пользователи онлайн:<br>
+        {% for user in users_online %}
+           {% raw user %}
+        {% end %}
     </div>
     <div id="body">
       <div id="inbox">

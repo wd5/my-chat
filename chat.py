@@ -49,7 +49,7 @@ class MessageMixin(object):
     # Пользователи ожидающие сообщений
     waiters = set()
     # Пользователи онлайн
-    users_online = set()
+    users_online = []
     messages_cache = []
 
     def wait_for_messages(self, callback):
@@ -91,13 +91,8 @@ class MessageMixin(object):
                 "user_id": user.get_user_id(),
                 "html": user.render_string("message_out.html", message="%s ушел(сам)" % user.get_current_user(), time = time),
             }
-        for callback in cls.waiters:
-            try:
-                callback.on_new_messages(message)
-            except :
-                pass
-        cls.waiters = set()
-        cls.users_online.remove(user.get_current_user())
+        self.new_messages(message)
+        cls.users_online.remove(user.render_string("user.html", user=user.get_current_user(), user_id=user.get_user_id()))
 
     def new_user(self, user):
         cls = MessageMixin
@@ -107,20 +102,15 @@ class MessageMixin(object):
             "user": user.render_string("user.html", user=user.get_current_user(), user_id=user.get_user_id()),
             "html": user.render_string("message_out.html", message="К нам пришел %s" % user.get_current_user(), time = time),
         }
-        for callback in cls.waiters:
-            try:
-                callback.on_new_messages(message)
-            except :
-                pass
-        cls.waiters = set()
-        cls.users_online.add(user.get_current_user())
+        self.new_messages(message)
+        cls.users_online.extend([message["user"]])
 
 class MainHandler(BaseHandler, MessageMixin):
     @tornado.web.authenticated
     def get(self):
         # Тут по замыслу надо будет проверять по базе уходил ли пользователь
         self.add_to_users_online(self)
-        self.render("index.html", messages=MessageMixin.messages_cache)
+        self.render("index.html", messages=MessageMixin.messages_cache, users_online=MessageMixin.users_online)
 
 class MessageUpdatesHandler(BaseHandler, MessageMixin):
     @tornado.web.authenticated
