@@ -8,8 +8,6 @@
   <body>
     <div id="nav">
         <a href="/auth/logout">{{ _("Sign out") }}</a>
-    </div>
-    <div id="users_online">
         Пользователи онлайн:<br>
         {% for user in users_online %}
            {% raw user %}

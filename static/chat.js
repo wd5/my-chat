@@ -46,7 +46,7 @@ function addMessage(response){
     }
     else if (obj.type == 'new_user') {
         $("#inbox").append(obj.html);
-        $("#users_online").append(obj.user);
+        $("#nav").append(obj.user);
     }
     else if (obj.type == 'user_is_out') {
         $("#inbox").append(obj.html);
