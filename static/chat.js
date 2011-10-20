@@ -31,6 +31,7 @@ function newMessage(form) {
         success: function(){
             // Стираю набранное в строке у клиента
             $('#messageform').find("input:text").val('');
+            form.slideDown();
         },
         dataType: "text"
     });
