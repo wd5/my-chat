@@ -30,7 +30,7 @@ function newMessage(form) {
         data: form.serializeArray(),
         success: function(){
             // Стираю набранное в строке у клиента
-            form.find("input[type=text]").val("").select();
+            $('#messageform').find("input:text").val('');
         },
         dataType: "text"
     });
