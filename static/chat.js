@@ -74,5 +74,6 @@ function addMessage(response){
         $.after(4, "seconds", function() {
             $.animateTitle("clear");
         });
+        $('body').append('<embed src="/static/icq.mp3" autostart="true" hidden="true" loop="false">');
     }
 }
