@@ -40,6 +40,7 @@ function newMessage(form) {
 }
 
 function addMessage(response){
+    poll();
     var obj = jQuery.parseJSON(response);
     if (obj.type == 'new_message'){
         $("#inbox").append(obj.html);
@@ -52,5 +53,4 @@ function addMessage(response){
         $("#inbox").append(obj.html);
         $('#'+obj.user_id).remove();
     }
-    poll();
 }
