@@ -1,3 +1,4 @@
+var focus;
 $(document).ready(function() {
     // Постинг формы через ajax
     $("#messageform").live("keypress", function(e) {
@@ -7,6 +8,21 @@ $(document).ready(function() {
         }
     });
     poll();
+    if (/*@cc_on!@*/false) {
+        document.onfocusin = function(){
+            focus = "True";
+        };
+        document.onfocusout = function(){
+            focus = "False";
+        }
+    } else {
+        window.onload=window.onfocus = function(){
+            focus = "True";
+        };
+        window.onblur = function(){
+            focus = "False";
+        }
+    }
 });
 
 // Ожидает новых сообщений
@@ -52,5 +68,11 @@ function addMessage(response){
     else if (obj.type == 'user_is_out') {
         $("#inbox").append(obj.html);
         $('#'+obj.user_id).remove();
+    }
+    if (focus == "False"){
+        $.animateTitle(['В чате новое сообщение', '@@@@'], 500);
+        $.after(4, "seconds", function() {
+            $.animateTitle("clear");
+        });
     }
 }
