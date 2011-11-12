@@ -74,7 +74,8 @@ class MessageMixin(object):
         for callback in cls.waiters:
             if callback.get_user_id() == private:
                 callback.on_new_messages(message)
-        cls.waiters = set()
+                new_callback = callback
+        cls.waiters.remove(new_callback)
 
     def add_to_users_online(self, user):
         cls = MessageMixin
