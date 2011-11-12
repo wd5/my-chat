@@ -73,8 +73,9 @@ class MessageMixin(object):
 
     def private_message(self, message, private):
         cls = MessageMixin
+        print private
         for callback in cls.waiters:
-            if callback.get_user_id == private:
+            if callback.get_user_id() == private:
                 callback.on_new_messages(message)
         cls.waiters = set()
 
@@ -181,6 +182,7 @@ class MessageNewHandler(BaseHandler, MessageMixin):
             private = False
         time = datetime.datetime.time(datetime.datetime.now()).strftime("%H:%M")
         if private:
+            print "Составляется приватное сообщение"
             message = {
                 "private" : "True",
                 "type": "new_message",
@@ -193,6 +195,7 @@ class MessageNewHandler(BaseHandler, MessageMixin):
             }
         # Формируется html сообщениe
         if private:
+            print "Отправляется приватное сообщение"
             self.private_message(message, private)
         else:
             self.new_messages(message)
