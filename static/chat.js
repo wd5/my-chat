@@ -16,13 +16,13 @@ $(document).ready(function() {
     	$('#private').val($(this).attr('id'));
         event.preventDefault();
         $('#private_name').html('<span class="closer"></span><div>Личное сообщение для '+$(this).text()+'</div>');
-        $('#inbox').css({paddingBottom: '+=40px'});
+        $('#inbox').css({paddingBottom: '135px'});
         window.scrollTo(0, document.body.scrollHeight);
     });
     $('#private_name .closer').live('click',function(){
     	$('#private').val("");
     	$('#private_name').html("");
-    	$('#inbox').css({paddingBottom: '-=40px'});
+    	$('#inbox').css({paddingBottom: '95px'});
     });
     poll();
     if (/*@cc_on!@*/false) {
