@@ -71,6 +71,13 @@ class MessageMixin(object):
         if len(cls.messages_cache) > self.cache_size:
             cls.messages_cache = cls.messages_cache[-self.cache_size:]
 
+    def private_message(self, message, private):
+        cls = MessageMixin
+        for callback in cls.waiters:
+            if callback.get_user_id == private:
+                callback.on_new_messages(message)
+        cls.waiters = set()
+
     def add_to_users_online(self, user):
         cls = MessageMixin
         user_html = user.render_string("user.html", user=user.get_current_user(), user_id=user.get_user_id())
@@ -168,13 +175,27 @@ class MessageUpdatesHandler(BaseHandler, MessageMixin):
 class MessageNewHandler(BaseHandler, MessageMixin):
     @tornado.web.authenticated
     def post(self):
+        try:
+            private = self.get_argument("private")
+        except :
+            private = False
         time = datetime.datetime.time(datetime.datetime.now()).strftime("%H:%M")
-        message = {
-            "type": "new_message",
-            "html": self.render_string("message.html", message=self.get_argument("message"), time = time),
-        }
+        if private:
+            message = {
+                "private" : "True",
+                "type": "new_message",
+                "html": self.render_string("message.html", message=self.get_argument("message"), time = time),
+            }
+        else:
+            message = {
+                "type": "new_message",
+                "html": self.render_string("message.html", message=self.get_argument("message"), time = time),
+            }
         # Формируется html сообщениe
-        self.new_messages(message)
+        if private:
+            self.private_message(message, private)
+        else:
+            self.new_messages(message)
 
 class AuthLoginHandler(BaseHandler, MessageMixin):
     def get(self):
