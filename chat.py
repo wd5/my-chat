@@ -69,13 +69,17 @@ class MessageMixin(object):
         if len(cls.messages_cache) > self.cache_size:
             cls.messages_cache = cls.messages_cache[-self.cache_size:]
 
-    def private_message(self, message, private):
+    def private_message(self, message, private, myid):
         cls = MessageMixin
         for callback in cls.waiters:
             if callback.get_user_id() == private:
                 callback.on_new_messages(message)
                 new_callback = callback
+            if callback.get_user_id() == myid:
+                callback.on_new_messages(message)
+                new_callback2 = callback
         cls.waiters.remove(new_callback)
+        cls.waiters.remove(new_callback2)
 
     def add_to_users_online(self, user):
         cls = MessageMixin
@@ -183,7 +187,7 @@ class MessageNewHandler(BaseHandler, MessageMixin):
             }
         # Формируется html сообщениe
         if private:
-            self.private_message(message, private)
+            self.private_message(message, private, self.get_user_id())
         else:
             self.new_messages(message)
 
