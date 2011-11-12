@@ -61,19 +61,16 @@ class MessageMixin(object):
         cls = MessageMixin
         for callback in cls.waiters:
             try:
-                print "send message"
                 callback.on_new_messages(message)
             except:
                 logging.error("Error in waiter callback", exc_info=True)
         cls.waiters = set()
         cls.messages_cache.extend([message])
-        print len(cls.messages_cache)
         if len(cls.messages_cache) > self.cache_size:
             cls.messages_cache = cls.messages_cache[-self.cache_size:]
 
     def private_message(self, message, private):
         cls = MessageMixin
-        print private
         for callback in cls.waiters:
             if callback.get_user_id() == private:
                 callback.on_new_messages(message)
@@ -82,9 +79,6 @@ class MessageMixin(object):
     def add_to_users_online(self, user):
         cls = MessageMixin
         user_html = user.render_string("user.html", user=user.get_current_user(), user_id=user.get_user_id())
-        for i in cls.users_online:
-            print i, "users_online"
-            print str(user_html)
         if not user_html in cls.users_online:
             self.new_user(user)
 
@@ -144,17 +138,12 @@ class MessageUpdatesHandler(BaseHandler, MessageMixin):
         cls = MessageMixin
         time.sleep(5)
         user_online = False
-        print cls.ttt
         if cls.ttt:
-            print cls.waiters
             for user in cls.waiters:
-                print user.get_current_user()
                 if user.get_current_user() == self.get_current_user():
                     user_online = True
-                    print "Пользователь вернулся:)"
             if not user_online:
                 self.user_is_out(self,timeout=True)
-                print "Пользователь ушел:("
         cls.ttt = True
         cls.threads.remove(self.get_current_user())
 
@@ -164,7 +153,6 @@ class MessageUpdatesHandler(BaseHandler, MessageMixin):
         for i in cls.threads:
             if i == self.get_current_user():
                 thread_is_run = True
-                print "Такой процесс уже запущен:)"
         self.cancel_wait(self)
         if not thread_is_run:
             t = threading.Thread(target=self.is_user_out)
@@ -182,7 +170,6 @@ class MessageNewHandler(BaseHandler, MessageMixin):
             private = False
         time = datetime.datetime.time(datetime.datetime.now()).strftime("%H:%M")
         if private:
-            print "Составляется приватное сообщение"
             message = {
                 "private" : "True",
                 "type": "new_message",
@@ -195,7 +182,6 @@ class MessageNewHandler(BaseHandler, MessageMixin):
             }
         # Формируется html сообщениe
         if private:
-            print "Отправляется приватное сообщение"
             self.private_message(message, private)
         else:
             self.new_messages(message)
