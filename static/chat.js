@@ -7,6 +7,23 @@ $(document).ready(function() {
             return false;
         }
     });
+    $("#messageform input").live("click", function(event) {
+        event.preventDefault();
+        newMessage($('#messageform'));
+    });
+    //Приват
+    $("#sidebar_inner a.user_nik").live("click", function(event) {
+    	$('#private').val($(this).attr('id'));
+        event.preventDefault();
+        $('#private_name').html('<span class="closer"></span><div>Личное сообщение для '+$(this).text()+'</div>');
+        $('#inbox').css({paddingBottom: '+=40px'});
+        window.scrollTo(0, document.body.scrollHeight);
+    });
+    $('#private_name .closer').live('click',function(){
+    	$('#private').val("");
+    	$('#private_name').html("");
+    	$('#inbox').css({paddingBottom: '-=40px'});
+    });
     poll();
     if (/*@cc_on!@*/false) {
         document.onfocusin = function(){
@@ -63,7 +80,7 @@ function addMessage(response){
     }
     else if (obj.type == 'new_user') {
         $("#inbox").append(obj.html);
-        $("#nav").append(obj.user);
+        $("#sidebar_inner").append(obj.user);
     }
     else if (obj.type == 'user_is_out') {
         $("#inbox").append(obj.html);
@@ -76,4 +93,5 @@ function addMessage(response){
             $.animateTitle("clear");
         });
     }
+    window.scrollTo(0, document.body.scrollHeight);
 }

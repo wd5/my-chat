@@ -1,1 +1,11 @@
-{{ time }} {{ current_user }}: {{ message }}<br>
+<div class="msg clearfix">
+	<div class="msg_text alignleft">
+		<div class="msg_name">
+			{{ current_user }}
+		</div>
+		<p>{{ message }}</p>
+	</div>
+	<div class="msg_date alignright">
+		{{ time }}
+	</div>
+</div>
