@@ -77,7 +77,7 @@ class MessageMixin(object):
                 callback.on_new_messages(message)
                 new_callback.append(callback)
             if myid == private:
-                continue
+                break
             if callback.get_user_id() == myid:
                 callback.on_new_messages(message2)
                 new_callback.append(callback)
