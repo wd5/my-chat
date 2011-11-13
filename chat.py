@@ -182,7 +182,7 @@ class MessageNewHandler(BaseHandler, MessageMixin):
             message = {
                 "private" : "True",
                 "type": "new_message",
-                "html": self.render_string("private_message.html", message=self.get_argument("message"), time = time, who="тебе"),
+                "html": self.render_string("private_message.html", message=self.get_argument("message"), time = time, who="тебя"),
             }
             message2 = {
                 "private" : "True",
