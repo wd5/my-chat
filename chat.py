@@ -215,16 +215,16 @@ class MessageNewHandler(BaseHandler, MessageMixin):
             message2 = {
                 "private" : "True",
                 "type": "new_message",
-                "html": self.render_string("private_message.html", message=self.get_argument("message"), time = time, who=private_to),
+                "html": self.render_string("private_message.html", message=self.get_argument("message"), time = time, who=private_to, id=self.get_user_id()),
             }
         elif personals:
             message = {
                 "type": "new_message",
-                "html": self.render_string("direct_message.html", message=self.get_argument("message"), time = time, personals=personals_name),
+                "html": self.render_string("direct_message.html", message=self.get_argument("message"), time = time, personals=personals_name, id=self.get_user_id()),
             }
             message2 = {
                 "type": "new_message",
-                "html": self.render_string("direct_message_all.html", message=self.get_argument("message"), time = time, personals=personals_name),
+                "html": self.render_string("direct_message_all.html", message=self.get_argument("message"), time = time, personals=personals_name, id=self.get_user_id()),
             }
         else:
             message = {
