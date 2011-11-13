@@ -117,13 +117,13 @@ class MessageMixin(object):
             message = {
                 "type": "user_is_out",
                 "user_id": user.get_user_id(),
-                "html": user.render_string("message_out.html", message="%s ушел(timeout)" % user.get_current_user(), time = time),
+                "html": user.render_string("message_out.html", message="%s ушел(timeout)" % user.get_current_user(), time = time, id=user.get_user_id()),
             }
         else:
             message = {
                 "type": "user_is_out",
                 "user_id": user.get_user_id(),
-                "html": user.render_string("message_out.html", message="%s ушел(сам)" % user.get_current_user(), time = time),
+                "html": user.render_string("message_out.html", message="%s ушел(сам)" % user.get_current_user(), time = time, id=user.get_user_id()),
             }
         self.new_messages(message)
         cls.users_online.remove(user.render_string("user.html", user=user.get_current_user(), user_id=user.get_user_id()))
