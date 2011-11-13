@@ -69,14 +69,14 @@ class MessageMixin(object):
         if len(cls.messages_cache) > self.cache_size:
             cls.messages_cache = cls.messages_cache[-self.cache_size:]
 
-    def private_message(self, message, private, myid):
+    def private_message(self, message, message2, private, myid):
         cls = MessageMixin
         for callback in cls.waiters:
             if callback.get_user_id() == private:
                 callback.on_new_messages(message)
                 new_callback = callback
             if callback.get_user_id() == myid:
-                callback.on_new_messages(message)
+                callback.on_new_messages(message2)
                 new_callback2 = callback
         cls.waiters.remove(new_callback)
         cls.waiters.remove(new_callback2)
@@ -171,6 +171,10 @@ class MessageNewHandler(BaseHandler, MessageMixin):
     def post(self):
         try:
             private = self.get_argument("private")
+            cls = MessageMixin
+            for i in cls.waiters:
+                if i.get_user_id() == private:
+                    private_to = i.get_current_user()
         except :
             private = False
         time = datetime.datetime.time(datetime.datetime.now()).strftime("%H:%M")
@@ -180,6 +184,11 @@ class MessageNewHandler(BaseHandler, MessageMixin):
                 "type": "new_message",
                 "html": self.render_string("private_message.html", message=self.get_argument("message"), time = time),
             }
+            message2 = {
+                "private" : "True",
+                "type": "new_message",
+                "html": self.render_string("private_message.html", message=self.get_argument("message"), time = time, who=private_to),
+            }
         else:
             message = {
                 "type": "new_message",
@@ -187,7 +196,7 @@ class MessageNewHandler(BaseHandler, MessageMixin):
             }
         # Формируется html сообщениe
         if private:
-            self.private_message(message, private, self.get_user_id())
+            self.private_message(message, message2, private, self.get_user_id())
         else:
             self.new_messages(message)
 
