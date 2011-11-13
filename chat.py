@@ -81,6 +81,18 @@ class MessageMixin(object):
         cls.waiters.remove(new_callback)
         cls.waiters.remove(new_callback2)
 
+    def direct_message(self, message, message2, personals, myid):
+        cls = MessageMixin
+        for callback in cls.waiters:
+            if callback.get_user_id() in personals:
+                callback.on_new_messages(message)
+            else:
+                callback.on_new_messages(message2)
+        cls.waiters = set()
+        cls.messages_cache.extend([message])
+        if len(cls.messages_cache) > self.cache_size:
+            cls.messages_cache = cls.messages_cache[-self.cache_size:]
+
     def add_to_users_online(self, user):
         cls = MessageMixin
         user_html = user.render_string("user.html", user=user.get_current_user(), user_id=user.get_user_id())
@@ -170,9 +182,14 @@ class MessageNewHandler(BaseHandler, MessageMixin):
     @tornado.web.authenticated
     def post(self):
         try:
-            pesonals = self.get_arguments("personal[]")
+            personals = self.get_arguments("personal[]")
+            personals_name = []
+            cls = MessageMixin
+            for i in cls.waiters:
+                if i.get_user_id() in personals:
+                    personals_name.append(i.get_current_user())
         except:
-            pass
+            personals = False
         try:
             private = self.get_argument("private")
             cls = MessageMixin
@@ -193,6 +210,15 @@ class MessageNewHandler(BaseHandler, MessageMixin):
                 "type": "new_message",
                 "html": self.render_string("private_message.html", message=self.get_argument("message"), time = time, who=private_to),
             }
+        elif personals:
+            message = {
+                "type": "new_message",
+                "html": self.render_string("direct_message.html", message=self.get_argument("message"), time = time, personals=personals_name),
+            }
+            message2 = {
+                "type": "new_message",
+                "html": self.render_string("direct_message_all.html", message=self.get_argument("message"), time = time, personals=personals_name),
+            }
         else:
             message = {
                 "type": "new_message",
@@ -201,6 +227,8 @@ class MessageNewHandler(BaseHandler, MessageMixin):
         # Формируется html сообщениe
         if private:
             self.private_message(message, message2, private, self.get_user_id())
+        elif personals:
+            self.direct_message(message, message2, personals, self.get_user_id())
         else:
             self.new_messages(message)
 
