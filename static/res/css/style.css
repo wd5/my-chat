@@ -140,6 +140,13 @@ body {
 	margin: 10px;
 	padding: 7px 10px 7px 30px;
 }
+#inbox .private{
+	border:1px solid #cbcbcb; 
+	-webkit-border-radius:4px; 
+	-moz-border-radius:4px; 
+	border-radius:4px; 
+	box-shadow: 0 1px 4px #169BB4 inset;
+}
 #inbox .msg .msg_text{
 	width: 482px;
 }
@@ -147,9 +154,11 @@ body {
 	line-height: 20px;
 }
 #inbox .msg .msg_name{
+	margin: 0 0 3px;
+}
+#inbox .msg .msg_name .from, #inbox .msg .msg_name .for{
 	color: #5B7393;
 	font-weight: bold;
-	margin: 0 0 3px;
 }
 #inbox .msg .msg_date{
 	color: #B1B1B1;
@@ -162,7 +171,7 @@ body {
     bottom: 0px;
     padding: 20px;
     position: fixed;
-    width: 588px;
+    width: 590px;
     z-index: 90;
 }
 #input .button_blue{

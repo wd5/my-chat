@@ -170,6 +170,10 @@ class MessageNewHandler(BaseHandler, MessageMixin):
     @tornado.web.authenticated
     def post(self):
         try:
+            pesonals = self.get_arguments("personal[]")
+        except:
+            pass
+        try:
             private = self.get_argument("private")
             cls = MessageMixin
             for i in cls.waiters:
