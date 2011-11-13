@@ -71,17 +71,17 @@ class MessageMixin(object):
 
     def private_message(self, message, message2, private, myid):
         cls = MessageMixin
+        new_callback = []
         for callback in cls.waiters:
             if callback.get_user_id() == private:
                 callback.on_new_messages(message)
-                new_callback = callback
-                cls.waiters.remove(new_callback)
+                new_callback.append(callback)
             if myid == private:
                 continue
             if callback.get_user_id() == myid:
                 callback.on_new_messages(message2)
-                new_callback2 = callback
-                cls.waiters.remove(new_callback2)
+                new_callback.append(callback)
+        cls.waiters.remove(new_callback)
 
     def direct_message(self, message, message2, personals, myid):
         cls = MessageMixin
