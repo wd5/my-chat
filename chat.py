@@ -93,8 +93,6 @@ class MessageMixin(object):
         for callback in cls.waiters:
             if callback.get_user_id() in personals:
                 callback.on_new_messages(message)
-            if callback.get_user_id() == myid:
-                callback.on_new_messages(message)
             else:
                 callback.on_new_messages(message2)
         cls.waiters = set()
