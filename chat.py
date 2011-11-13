@@ -89,7 +89,7 @@ class MessageMixin(object):
             else:
                 callback.on_new_messages(message2)
         cls.waiters = set()
-        cls.messages_cache.extend([message])
+        cls.messages_cache.extend([message2])
         if len(cls.messages_cache) > self.cache_size:
             cls.messages_cache = cls.messages_cache[-self.cache_size:]
 
