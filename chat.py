@@ -229,7 +229,7 @@ class MessageNewHandler(BaseHandler, MessageMixin):
         else:
             message = {
                 "type": "new_message",
-                "html": self.render_string("message.html", message=self.get_argument("message"), time = time),
+                "html": self.render_string("message.html", message=self.get_argument("message"), time = time, id=self.get_user_id()),
             }
         # Формируется html сообщениe
         if private:
