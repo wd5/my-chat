@@ -134,7 +134,7 @@ class MessageMixin(object):
         message = {
             "type": "new_user",
             "user": user.render_string("user.html", user=user.get_current_user(), user_id=user.get_user_id()),
-            "html": user.render_string("message_out.html", message="К нам пришел %s" % user.get_current_user(), time = time),
+            "html": user.render_string("message_out.html", message="К нам пришел %s" % user.get_current_user(), time = time, id=user.get_user_id()),
         }
         self.new_messages(message)
         cls.users_online.extend([message["user"]])
@@ -210,7 +210,7 @@ class MessageNewHandler(BaseHandler, MessageMixin):
             message = {
                 "private" : "True",
                 "type": "new_message",
-                "html": self.render_string("private_message.html", message=self.get_argument("message"), time = time, who="тебя"),
+                "html": self.render_string("private_message.html", message=self.get_argument("message"), time = time, who="тебя", id=self.get_user_id()),
             }
             message2 = {
                 "private" : "True",
