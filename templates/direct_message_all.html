@@ -1,7 +1,11 @@
 <div class="msg clearfix">
 	<div class="msg_text alignleft">
 		<div class="msg_name">
-			<span class="from">{{ current_user }}</span>
+			<a id="{{id}}" href="noscript" class="from user_nik sub_id_{{id}}" title="личное сообщение">{{ current_user }}</a> : 
+            {% set last = len(personals) - 1 %} 
+            {% for value, personal in enumerate(personals) %}
+                {{personal}}{% if value != last %},{% end %}
+            {% end %}
 		</div>
 		<p>{{ message }}</p>
 	</div>

@@ -12,30 +12,33 @@ $(document).ready(function() {
         newMessage($('#messageform'));
     });
     //Приват
-    $("#sidebar_inner a.user_nik").live("click", function(event) {
-    	if($(this).hasClass('personal')){
-    		$('#sidebar_inner .personal').removeClass('personal');
+    $("a.user_nik").live("click", function(event) {
+    	event.preventDefault();
+    	var tar_id = $(this).attr('id');
+    	if($('#'+(tar_id)).hasClass('personal_link')||($(this).parent().parent().parent().hasClass('private'))){
+    		$('.personal_link').removeClass('personal_link');
     		$('#private').val($(this).attr('id'));
     		$('#personal').val("");
     		$('.clone_personal').remove();
 	        $('#private_name').html('<span class="closer"></span><div>Личное сообщение для '+$(this).text()+'</div>').addClass('private');
-    	}else{
-    		$(this).addClass('personal');
-    		
+    	}else{	
     		$('#private').val("");
     		if((!($('#private_name div').length))||($('#private_name').hasClass('private'))){
-    			$('#personal').val($(this).attr('id'));
+    			$('#personal').val(tar_id);
     			$('#private_name').html('<span class="closer"></span><div>Обращение к '+$(this).text()+'</div>').removeClass('private');
+    			$('a.sub_id_'+tar_id).addClass('personal_link');
     		}else{
-	    		$('#private_name div').append(', '+$(this).text());
-	    		$('#messageform').append('<input class="clone_personal" id="personal" type="hidden" value="'+($(this).attr('id'))+'" name="personal[]">');
+    			if(!($('#'+(tar_id)).hasClass('personal_link'))){
+	    			$('#private_name div').append(', '+$(this).text());
+	    			$('#messageform').append('<input class="clone_personal" id="personal" type="hidden" value="'+(tar_id)+'" name="personal[]">');
+	    			$('a.sub_id_'+tar_id).addClass('personal_link');
+	    		}
 	    	}
     	}
     	
     	
     	
-    	
-	    event.preventDefault();
+	    
         $('#inbox').css({paddingBottom: '135px'});
         window.scrollTo(0, document.body.scrollHeight);
         $('#message').focus();
@@ -46,7 +49,7 @@ $(document).ready(function() {
     	$('#private_name').html("");
     	$('.clone_personal').remove();
     	$('#inbox').css({paddingBottom: '95px'});
-    	$('#sidebar_inner .personal').removeClass('personal').removeClass('private');
+    	$('.personal_link').removeClass('personal_link');
     });
     poll();
     if (/*@cc_on!@*/false) {
@@ -100,10 +103,18 @@ function addMessage(response){
     poll();
     var obj = jQuery.parseJSON(response);
     if (obj.type == 'new_message'){
-        $("#inbox").append(obj.html);
+        var $last = $(obj.html).appendTo("#inbox");
+        if($last.hasClass('personal')){
+        	setTimeout(function(){
+        		$last.children('.shadow').animate({opacity:0},4000);
+        	},2000)
+        }
     }
     else if (obj.type == 'new_user') {
-        $("#inbox").append(obj.html);
+        var $last_user = $(obj.html).appendTo("#inbox");
+        setTimeout(function(){
+        		$last_user.children('.shadow').animate({opacity:0},4000);
+        	},2000)
         $("#sidebar_inner").append(obj.user);
     }
     else if (obj.type == 'user_is_out') {

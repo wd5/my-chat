@@ -1,4 +1,11 @@
-К нам пришел
-{{ id }}
-{{ current_user }}
-{{ time }}
+<div class="msg clearfix hello_msg">
+	<div class="shadow"></div>
+	<div class="msg_text alignleft">
+		<div class="msg_name">
+			К нам пришел <a id="{{id}}" href="noscript" class="from user_nik sub_id_{{id}}" title="личное сообщение">{{ current_user }}</a>
+		</div>
+	</div>
+	<div class="msg_date alignright">
+		{{ time }}
+	</div>
+</div>
