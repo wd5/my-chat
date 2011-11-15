@@ -129,6 +129,7 @@ class MessageMixin(object):
         cls.users_online.remove(user.render_string("user.html", user=user.get_current_user(), user_id=user.get_user_id()))
 
     def new_user(self, user):
+        print "Пришел новый пользователь: :%s" % user.get_current_user()
         cls = MessageMixin
         time = datetime.datetime.time(datetime.datetime.now()).strftime("%H:%M")
         message = {
@@ -167,17 +168,21 @@ class MessageUpdatesHandler(BaseHandler, MessageMixin):
             for user in cls.waiters:
                 if user.get_current_user() == self.get_current_user():
                     user_online = True
+                    print "Пользователь %s вернулся" % self.get_current_user()
             if not user_online:
                 self.user_is_out(self,timeout=True)
+                print "Пользователь %s ушел насовсем" % self.get_current_user()
         cls.ttt = True
         cls.threads.remove(self.get_current_user())
 
     def on_connection_close(self):
+        print "Connection close %s" % self.get_current_user()
         cls = MessageMixin
         thread_is_run = False
         for i in cls.threads:
             if i == self.get_current_user():
                 thread_is_run = True
+                print "Такой процесс уже запущен"
         self.cancel_wait(self)
         if not thread_is_run:
             t = threading.Thread(target=self.is_user_out)
