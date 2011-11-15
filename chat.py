@@ -164,6 +164,7 @@ class MessageUpdatesHandler(BaseHandler, MessageMixin):
         time.sleep(5)
         user_online = False
         for user in cls.waiters:
+            print user.get_current_user()
             if user.get_current_user() == self.get_current_user():
                 user_online = True
                 print "Пользователь %s вернулся" % self.get_current_user()
