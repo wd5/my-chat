@@ -78,8 +78,8 @@ function poll(){
         url: "/a/message/updates",
         data: $.param(args),
         dataType: "text",
-        success: addMessage
-//        error: updater.onError});
+        success: addMessage,
+        error: poll()
     });
 }
 
