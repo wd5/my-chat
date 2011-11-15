@@ -160,6 +160,7 @@ class MessageUpdatesHandler(BaseHandler, MessageMixin):
 
     def is_user_out(self):
         cls = MessageMixin
+        print "Пользователь %s ушел, ждем 5 секунд" % self.get_current_user()
         time.sleep(5)
         user_online = False
         if cls.ttt:
