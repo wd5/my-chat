@@ -45,7 +45,6 @@ class BaseHandler(tornado.web.RequestHandler):
 class MessageMixin(object):
     # Ответвленные нити
     threads = set()
-    ttt = True
     # Пользователи ожидающие сообщений
     waiters = set()
     # Пользователи онлайн
@@ -164,15 +163,13 @@ class MessageUpdatesHandler(BaseHandler, MessageMixin):
         print "Пользователь %s ушел, ждем 5 секунд" % self.get_current_user()
         time.sleep(5)
         user_online = False
-        if cls.ttt:
-            for user in cls.waiters:
-                if user.get_current_user() == self.get_current_user():
-                    user_online = True
-                    print "Пользователь %s вернулся" % self.get_current_user()
-            if not user_online:
-                self.user_is_out(self,timeout=True)
-                print "Пользователь %s ушел насовсем" % self.get_current_user()
-        cls.ttt = True
+        for user in cls.waiters:
+            if user.get_current_user() == self.get_current_user():
+                user_online = True
+                print "Пользователь %s вернулся" % self.get_current_user()
+        if not user_online:
+            self.user_is_out(self,timeout=True)
+            print "Пользователь %s ушел насовсем" % self.get_current_user()
         cls.threads.remove(self.get_current_user())
 
     def on_connection_close(self):
@@ -205,7 +202,6 @@ class MessageNewHandler(BaseHandler, MessageMixin):
             personals = False
         try:
             private = self.get_argument("private")
-            print private
             cls = MessageMixin
             for i in cls.waiters:
                 if i.get_user_id() == private:
@@ -261,7 +257,6 @@ class AuthLogoutHandler(BaseHandler, MessageMixin):
         cls = MessageMixin
         self.clear_cookie("user")
         self.redirect("/")
-        cls.ttt = False
         self.user_is_out(self, timeout=False)
 
 def main():
