@@ -205,6 +205,7 @@ class MessageNewHandler(BaseHandler, MessageMixin):
             personals = False
         try:
             private = self.get_argument("private")
+            print private
             cls = MessageMixin
             for i in cls.waiters:
                 if i.get_user_id() == private:
