@@ -151,6 +151,7 @@ class MessageUpdatesHandler(BaseHandler, MessageMixin):
     @tornado.web.asynchronous
     def post(self):
         self.wait_for_messages(self)
+        self.add_to_users_online(self)
 
     def on_new_messages(self, messages):
         self.finish(messages)
