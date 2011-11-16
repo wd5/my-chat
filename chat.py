@@ -162,15 +162,17 @@ class MessageUpdatesHandler(BaseHandler, MessageMixin):
         print "Пользователь %s ушел, ждем 5 секунд" % self.get_current_user()
         time.sleep(5)
         cls = MessageMixin
-        user_online = False
-        for user in cls.waiters:
-            print user.get_current_user()
-            if user.get_current_user() == self.get_current_user():
-                user_online = True
-                print "Пользователь %s вернулся" % self.get_current_user()
-        if not user_online:
-            self.user_is_out(self,timeout=True)
-            print "Пользователь %s ушел насовсем" % self.get_current_user()
+        user_html = self.render_string("user.html", user=self.get_current_user(), user_id=self.get_user_id())
+        if not user_html in cls.users_online:
+            user_online = False
+            for user in cls.waiters:
+                print user.get_current_user()
+                if user.get_current_user() == self.get_current_user():
+                    user_online = True
+                    print "Пользователь %s вернулся" % self.get_current_user()
+            if not user_online:
+                self.user_is_out(self,timeout=True)
+                print "Пользователь %s ушел насовсем" % self.get_current_user()
         cls.threads.remove(self.get_current_user())
 
     def on_connection_close(self):
