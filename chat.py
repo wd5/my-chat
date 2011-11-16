@@ -163,7 +163,7 @@ class MessageUpdatesHandler(BaseHandler, MessageMixin):
         time.sleep(5)
         cls = MessageMixin
         user_html = self.render_string("user.html", user=self.get_current_user(), user_id=self.get_user_id())
-        if not user_html in cls.users_online:
+        if user_html in cls.users_online:
             user_online = False
             for user in cls.waiters:
                 print user.get_current_user()
