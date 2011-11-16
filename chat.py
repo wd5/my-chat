@@ -48,6 +48,7 @@ class MessageMixin(object):
     # Пользователи ожидающие сообщений
     waiters = set()
     # Пользователи онлайн
+    ttt = False
     users_online = []
     messages_cache = []
     cache_size = 20
@@ -163,14 +164,16 @@ class MessageUpdatesHandler(BaseHandler, MessageMixin):
         print "Пользователь %s ушел, ждем 5 секунд" % self.get_current_user()
         time.sleep(5)
         user_online = False
-        for user in cls.waiters:
-            print user.get_current_user()
-            if user.get_current_user() == self.get_current_user():
-                user_online = True
-                print "Пользователь %s вернулся" % self.get_current_user()
-        if not user_online:
-            self.user_is_out(self,timeout=True)
-            print "Пользователь %s ушел насовсем" % self.get_current_user()
+        if not cls.ttt:
+            for user in cls.waiters:
+                print user.get_current_user()
+                if user.get_current_user() == self.get_current_user():
+                    user_online = True
+                    print "Пользователь %s вернулся" % self.get_current_user()
+            if not user_online:
+                self.user_is_out(self,timeout=True)
+                print "Пользователь %s ушел насовсем" % self.get_current_user()
+            cls.ttt = False
         cls.threads.remove(self.get_current_user())
 
     def on_connection_close(self):
@@ -256,6 +259,7 @@ class AuthLoginHandler(BaseHandler, MessageMixin):
 class AuthLogoutHandler(BaseHandler, MessageMixin):
     def get(self):
         cls = MessageMixin
+        cls.ttt = True
         self.clear_cookie("user")
         self.redirect("/")
         self.user_is_out(self, timeout=False)
