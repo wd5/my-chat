@@ -109,6 +109,15 @@ function addMessage(response){
         		$last.children('.shadow').animate({opacity:0},4000);
         	},2000)
         }
+        if (obj.private =="True"){
+            if (focus == "False"){
+                document.getElementById('audiotag1').play();
+                $.animateTitle(['В чате новое сообщение', '@@@@'], 500);
+                $.after(4, "seconds", function() {
+                    $.animateTitle("clear");
+                });
+             }
+        }
     }
     else if (obj.type == 'new_user') {
         var $last_user = $(obj.html).appendTo("#inbox");
@@ -120,13 +129,6 @@ function addMessage(response){
     else if (obj.type == 'user_is_out') {
         $("#inbox").append(obj.html);
         $('#'+obj.user_id).remove();
-    }
-    if (focus == "False"){
-        document.getElementById('audiotag1').play();
-        $.animateTitle(['В чате новое сообщение', '@@@@'], 500);
-        $.after(4, "seconds", function() {
-            $.animateTitle("clear");
-        });
     }
     window.scrollTo(0, document.body.scrollHeight);
 }
