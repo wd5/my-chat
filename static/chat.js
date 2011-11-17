@@ -80,7 +80,7 @@ function poll(){
         data: $.param(args),
         dataType: "text",
         success: addMessage,
-        error: poll,
+        error: poll
     });
     is_poll = true;
 }
