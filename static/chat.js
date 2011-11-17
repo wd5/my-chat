@@ -87,6 +87,12 @@ function poll(){
 
 // Постинг сообщения в чат
 function newMessage(form) {
+    var poll_interval = setInterval(poll_check, 200);
+    function poll_check(){
+        if(!is_poll){
+            clearInterval(poll_interval);
+        }
+    }
     $.ajax({
         type: 'POST',
         url: "/a/message/new",
