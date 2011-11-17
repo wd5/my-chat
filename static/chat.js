@@ -1,4 +1,5 @@
 var focus;
+var is_poll;
 $(document).ready(function() {
     // Постинг формы через ajax
     $("#messageform").live("keypress", function(e) {
@@ -79,12 +80,19 @@ function poll(){
         data: $.param(args),
         dataType: "text",
         success: addMessage,
-        error: poll
+        error: setTimeout(poll,1000)
     });
+    is_poll = true;
 }
 
 // Постинг сообщения в чат
 function newMessage(form) {
+    var poll_interval = setInterval(poll_check, 200);
+    function poll_check(){
+        if(!is_poll){
+            clearInterval(poll_interval);
+        }
+    }
     $.ajax({
         type: 'POST',
         url: "/a/message/new",
@@ -100,6 +108,7 @@ function newMessage(form) {
 }
 
 function addMessage(response){
+    is_poll = false;
     poll();
     var obj = jQuery.parseJSON(response);
     if (obj.type == 'new_message'){
