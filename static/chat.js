@@ -127,6 +127,15 @@ function addMessage(response){
                 });
              }
         }
+        if (obj.personal =="True"){
+            if (focus == "False"){
+                document.getElementById('audiotag1').play();
+                $.animateTitle(['В чате новое сообщение', '@@@@'], 500);
+                $.after(4, "seconds", function() {
+                    $.animateTitle("clear");
+                });
+             }
+        }
     }
     else if (obj.type == 'new_user') {
         var $last_user = $(obj.html).appendTo("#inbox");
