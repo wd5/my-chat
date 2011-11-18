@@ -231,7 +231,6 @@ class MessageNewHandler(BaseHandler, MessageMixin):
                 "html": self.render_string("direct_message.html", message=self.get_argument("message"), time = time, personals=personals_name, id=self.get_user_id()),
             }
             message2 = {
-                "personal" : "True",
                 "type": "new_message",
                 "html": self.render_string("direct_message_all.html", message=self.get_argument("message"), time = time, personals=personals_name, id=self.get_user_id()),
             }
@@ -260,7 +259,6 @@ class AuthLoginHandler(BaseHandler, MessageMixin):
 
 class AuthLogoutHandler(BaseHandler, MessageMixin):
     def get(self):
-        cls = MessageMixin
         self.clear_cookie("user")
         self.redirect("/")
         self.user_is_out(self, timeout=False)
