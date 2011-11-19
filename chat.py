@@ -4,6 +4,7 @@ import uuid
 import tornado.options
 from tornado.options import define, options
 import tornado.web
+import tornado.ioloop
 import os.path
 import datetime
 import time, threading
@@ -152,6 +153,12 @@ class MessageUpdatesHandler(BaseHandler, MessageMixin):
     def post(self):
         self.wait_for_messages(self)
         self.add_to_users_online(self)
+        ioloop = tornado.ioloop.IOLoop.instance()
+        ioloop.add_timeout(time.time() + 10, self.print_online)
+
+    def print_online(self):
+        self.on_connection_close()
+        self.finish()
 
     def on_new_messages(self, messages):
         self.finish(messages)
